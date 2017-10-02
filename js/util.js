@@ -1,21 +1,17 @@
 // Вспомогательный модуль
 
-(function () {
-  // Объект со значениями кодов клавиш
-  const keyCodes = {
-    LEFT: 37,
-    RIGHT: 39
-  };
+// Объект со значениями кодов клавиш
+const keyCodes = {
+  ENTER: 13
+};
 
-  window.util = {
-    // Функция, сравнивающая значение переданного кода клавиши с кодом Left
-    isLeftPressed(code) {
-      return code === keyCodes.LEFT;
-    },
+// Функция, сравнивающая значение переданного кода клавиши с кодом Enter
+const isEnterPressed = (code) => code === keyCodes.ENTER;
 
-    // Функция, сравнивающая значение переданного кода клавиши с кодом Right
-    isRightPressed(code) {
-      return code === keyCodes.RIGHT;
-    }
-  };
-})();
+// Функция нахождения случайного целого числа в заданном диапазоне включительно
+const getRandomInRange = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+// Функция, возвращающая случайный элемент массива
+const getRandomArrayItem = (array) => array[getRandomInRange(0, array.length - 1)];
+
+export {isEnterPressed, getRandomArrayItem};
