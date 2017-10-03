@@ -29,7 +29,7 @@ const template = `\
         <div class="player-wrapper">
           <div class="player">
             <audio></audio>
-            <button class="player-control player-control--pause"></button>
+            <button class="player-control player-control--pause" type="button"></button>
             <div class="player-track">
               <span class="player-status"></span>
             </div>
@@ -43,7 +43,7 @@ const template = `\
         <div class="player-wrapper">
           <div class="player">
             <audio></audio>
-            <button class="player-control player-control--play"></button>
+            <button class="player-control player-control--play" type="button"></button>
             <div class="player-track">
               <span class="player-status"></span>
             </div>
@@ -57,7 +57,7 @@ const template = `\
         <div class="player-wrapper">
           <div class="player">
             <audio></audio>
-            <button class="player-control player-control--play"></button>
+            <button class="player-control player-control--play" type="button"></button>
             <div class="player-track">
               <span class="player-status"></span>
             </div>
@@ -71,7 +71,7 @@ const template = `\
         <div class="player-wrapper">
           <div class="player">
             <audio></audio>
-            <button class="player-control player-control--play"></button>
+            <button class="player-control player-control--play" type="button"></button>
             <div class="player-track">
               <span class="player-status"></span>
             </div>

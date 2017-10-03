@@ -29,21 +29,15 @@ const showScreen = (screenElement) => {
 };
 
 // Функция для принятия ответа на экране выбора артиста
-const acceptAnswer = (target, currentTarget) => {
-  while (target !== currentTarget) {
-    if (target.classList.contains(`main-answer`)) {
-      screen.showGenre();
-      break;
-    }
-    target = target.parentNode;
+const acceptAnswer = (target) => {
+  if (target.closest(`.main-answer`)) {
+    screen.showGenre();
   }
 };
 
-// Функция для предотвращения отправки формы при нажатии на кнопку проигрыша аудио на экране выбора жанра
-const blockControlButtons = (evt) => {
-  if (evt.target.classList.contains(`player-control`)) {
-    evt.preventDefault();
-  }
+// Функция, проверяющая чекбоксы ответов на экране выбора жанра и блокирующая кнопку отправки формы в случае, если ни один ответ не выбран
+const checkAnswers = (buttonElement, checkboxesElements) => {
+  buttonElement.disabled = !(Array.from(checkboxesElements).some((item) => item.checked));
 };
 
 // Обработчики событий
@@ -51,29 +45,13 @@ const startButtonClickHandler = () => {
   screen.showArtist();
 };
 
-const startButtonKeydownHandler = (evt) => {
-  if (isEnterPressed(evt.keyCode)) {
-    screen.showArtist();
-  }
-};
-
 const answersContainerClickHandler = (evt) => {
-  acceptAnswer(evt.target, evt.currentTarget);
+  acceptAnswer(evt.target);
 };
 
 const answersContainerKeydownHandler = (evt) => {
   if (isEnterPressed(evt.keyCode)) {
-    acceptAnswer(evt.target, evt.currentTarget);
-  }
-};
-
-const genreFormClickHandler = (evt) => {
-  blockControlButtons(evt);
-};
-
-const genreFormKeydownHandler = (evt) => {
-  if (isEnterPressed(evt.keyCode)) {
-    blockControlButtons(evt);
+    acceptAnswer(evt.target);
   }
 };
 
@@ -100,7 +78,6 @@ const screen = {
     const startButton = screenContainer.querySelector(`.main-play`);
 
     startButton.addEventListener(`click`, startButtonClickHandler);
-    startButton.addEventListener(`keydown`, startButtonKeydownHandler);
   },
 
   showArtist() {
@@ -120,18 +97,12 @@ const screen = {
     const answersCheckboxes = screenContainer.querySelectorAll(`input[name="answer"]`);
 
     const genreFormChangeHandler = () => {
-      if (Array.from(answersCheckboxes).some((item) => item.checked)) {
-        submitButton.disabled = false;
-      } else {
-        submitButton.disabled = true;
-      }
+      checkAnswers(submitButton, answersCheckboxes);
     };
 
     submitButton.disabled = true;
 
     genreForm.addEventListener(`change`, genreFormChangeHandler, true);
-    genreForm.addEventListener(`click`, genreFormClickHandler);
-    genreForm.addEventListener(`keydown`, genreFormKeydownHandler);
     genreForm.addEventListener(`submit`, genreFormSubmitHandler);
   },
 
