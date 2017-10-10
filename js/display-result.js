@@ -1,6 +1,6 @@
 // Модуль для вывода результатов игрока
 
-import {getPercentageOfSmallerNumbers} from './util.js';
+import {getPercentageOfSmallerNumbers, getGreaterNumbersQuantity} from './util.js';
 
 const FAILURE_SCORE = -1;
 
@@ -19,8 +19,7 @@ const displayResult = (statistics, {timeLeft: time, score: score}) => {
     return resultTemplates.NO_ATTEMPTS_LEFT;
   }
   statistics.push(score);
-  statistics.sort((a, b) => b - a);
-  return `Вы заняли ${statistics.indexOf(score) + 1}-ое место из ${statistics.length} игроков. Это лучше, чем у ${getPercentageOfSmallerNumbers(statistics, score)}% игроков`;
+  return `Вы заняли ${getGreaterNumbersQuantity(statistics, score) + 1}-ое место из ${statistics.length} игроков. Это лучше, чем у ${getPercentageOfSmallerNumbers(statistics, score)}% игроков`;
 };
 
 export default displayResult;

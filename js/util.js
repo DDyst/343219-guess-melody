@@ -20,4 +20,7 @@ const getPercentageOfSmallerNumbers = (allNumbers, ourNumber) => {
   return Math.floor(smallerNumbersQuantity / allNumbers.length * 100);
 };
 
-export {isEnterPressed, getRandomArrayItem, getPercentageOfSmallerNumbers};
+// Функция, находящая количество элементов в массиве чисел, больших, чем переданное число
+const getGreaterNumbersQuantity = (allNumbers, ourNumber) => allNumbers.filter((item) => item > ourNumber).length;
+
+export {isEnterPressed, getRandomArrayItem, getPercentageOfSmallerNumbers, getGreaterNumbersQuantity};
