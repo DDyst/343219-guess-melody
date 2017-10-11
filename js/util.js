@@ -14,4 +14,13 @@ const getRandomInRange = (min, max) => Math.floor(Math.random() * (max - min + 1
 // Функция, возвращающая случайный элемент массива
 const getRandomArrayItem = (array) => array[getRandomInRange(0, array.length - 1)];
 
-export {isEnterPressed, getRandomArrayItem};
+// Функция, возвращающая процент чисел из переданного массива, меньших, чем переданное число
+const getPercentageOfSmallerNumbers = (allNumbers, ourNumber) => {
+  const smallerNumbersQuantity = allNumbers.filter((item) => item < ourNumber).length;
+  return Math.floor(smallerNumbersQuantity / allNumbers.length * 100);
+};
+
+// Функция, находящая количество элементов в массиве чисел, больших, чем переданное число
+const getGreaterNumbersQuantity = (allNumbers, ourNumber) => allNumbers.filter((item) => item > ourNumber).length;
+
+export {isEnterPressed, getRandomArrayItem, getPercentageOfSmallerNumbers, getGreaterNumbersQuantity};
