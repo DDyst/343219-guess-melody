@@ -1,13 +1,13 @@
 // Модуль для отрисовки экранов
 
-import {isEnterPressed, getRandomArrayItem} from './util.js';
+import {isEnterPressed} from './util.js';
 import welcomeScreenElement from './screen-welcome.js';
-import artistScreenElement from './screen-artist.js';
-import genreScreenElement from './screen-genre.js';
-import successScreenElement from './screen-success.js';
-import timeoutScreenElement from './screen-timeout.js';
-import defeatScreenElement from './screen-defeat.js';
+import createLevelScreenElement from './screen-level.js';
+import createResultsScreenElement from './screen-results.js';
+import {levels as gameLevels, initialState, resultsScreenData, statistics as othersScore, playerResult} from './data.js';
 
+// let playerAnswers;
+let levels;
 const screenContainer = document.querySelector(`.main`);
 
 // Функция для отрисовки нужного экрана на странице
@@ -31,7 +31,7 @@ const showScreen = (screenElement) => {
 // Функция для принятия ответа на экране выбора артиста
 const acceptAnswer = (target) => {
   if (target.closest(`.main-answer`)) {
-    screen.showGenre();
+    showNextScreen();
   }
 };
 
@@ -40,9 +40,24 @@ const checkAnswers = (buttonElement, checkboxesElements) => {
   buttonElement.disabled = !(Array.from(checkboxesElements).some((item) => item.checked));
 };
 
+// Функция для подготовки данных к началу новой игры
+const startNewGame = () => {
+  // playerAnswers = [];
+  levels = gameLevels.slice();
+};
+
+const showNextScreen = () => {
+  if (levels.length) {
+    screen.showLevel(initialState, levels.shift());
+  } else {
+    screen.showResult(resultsScreenData, othersScore, playerResult);
+  }
+};
+
 // Обработчики событий
 const startButtonClickHandler = () => {
-  screen.showArtist();
+  startNewGame();
+  screen.showLevel(initialState, levels.shift());
 };
 
 const answersContainerClickHandler = (evt) => {
@@ -57,7 +72,7 @@ const answersContainerKeydownHandler = (evt) => {
 
 const genreFormSubmitHandler = (evt) => {
   evt.currentTarget.reset();
-  screen.showResult();
+  showNextScreen();
 };
 
 const replayButtonClickHandler = () => {
@@ -80,34 +95,37 @@ const screen = {
     startButton.addEventListener(`click`, startButtonClickHandler);
   },
 
-  showArtist() {
-    showScreen(artistScreenElement);
+  showLevel(state, level) {
+    showScreen(createLevelScreenElement(state, level));
+    if (level.type === `genre`) {
+      const genreForm = screenContainer.querySelector(`.genre`);
+      const submitButton = screenContainer.querySelector(`.genre-answer-send`);
+      const answersCheckboxes = screenContainer.querySelectorAll(`input[name="answer"]`);
 
-    const answersContainer = screenContainer.querySelector(`.main-list`);
+      const genreFormChangeHandler = () => {
+        checkAnswers(submitButton, answersCheckboxes);
+      };
 
-    answersContainer.addEventListener(`click`, answersContainerClickHandler);
-    answersContainer.addEventListener(`keydown`, answersContainerKeydownHandler);
+      submitButton.disabled = true;
+
+      genreForm.addEventListener(`change`, genreFormChangeHandler, true);
+      genreForm.addEventListener(`submit`, genreFormSubmitHandler);
+    } else {
+      const answersContainer = screenContainer.querySelector(`.main-list`);
+
+      answersContainer.addEventListener(`click`, answersContainerClickHandler);
+      answersContainer.addEventListener(`keydown`, answersContainerKeydownHandler);
+    }
   },
 
-  showGenre() {
-    showScreen(genreScreenElement);
-
-    const genreForm = screenContainer.querySelector(`.genre`);
-    const submitButton = screenContainer.querySelector(`.genre-answer-send`);
-    const answersCheckboxes = screenContainer.querySelectorAll(`input[name="answer"]`);
-
-    const genreFormChangeHandler = () => {
-      checkAnswers(submitButton, answersCheckboxes);
-    };
-
-    submitButton.disabled = true;
-
-    genreForm.addEventListener(`change`, genreFormChangeHandler, true);
-    genreForm.addEventListener(`submit`, genreFormSubmitHandler);
-  },
-
-  showResult() {
-    showScreen(getRandomArrayItem([successScreenElement, timeoutScreenElement, defeatScreenElement]));
+  showResult(screenData, statistics, result) {
+    if (!result.timeLeft) {
+      showScreen(createResultsScreenElement(screenData.timeout, statistics, result));
+    } else if (result.score === -1) {
+      showScreen(createResultsScreenElement(screenData.defeat, statistics, result));
+    } else {
+      showScreen(createResultsScreenElement(screenData.success, statistics, result));
+    }
 
     const replayButton = screenContainer.querySelector(`.main-replay`);
 
