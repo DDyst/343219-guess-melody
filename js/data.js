@@ -2,11 +2,23 @@
 
 import audio from './audio.js';
 
+const SECONDS_PER_MINUTE = 60;
+const SMALLEST_TWO_DIGIT_NUMBER = 10;
+
 // Объект с данными о количестве баллов, присуждаемых за ответ игрока
 const points = {
   CORRECT_QUICK: 2,
   CORRECT_SLOW: 1,
   INCORRECT: -2
+};
+
+// Объект с исходными условиями игры
+const initialData = {
+  time: 300,
+  notes: 3,
+  get minutes() {
+    return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
+  }
 };
 
 // Объект с данными экрана результатов
@@ -33,18 +45,18 @@ const statistics = [10, 12, 8, 5, 9, 2];
 
 // Изначальное состояние игры
 const InitialState = function () {
-  this.timeLeft = 300;
-  this.notesLeft = 3;
+  this.timeLeft = initialData.time;
+  this.notesLeft = initialData.notes;
 };
 
 InitialState.prototype = {
   getMinutes() {
-    return Math.floor(this.timeLeft / 60);
+    return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
   },
 
   getSeconds() {
-    const secondsLeft = this.timeLeft % 60;
-    return (secondsLeft > 10) ? secondsLeft : `0${secondsLeft}`;
+    const secondsLeft = this.timeLeft % SECONDS_PER_MINUTE;
+    return (secondsLeft >= SMALLEST_TWO_DIGIT_NUMBER) ? secondsLeft : `0${secondsLeft}`;
   }
 };
 
@@ -267,4 +279,4 @@ const testLevels = [
   }
 ];
 
-export {InitialState, resultsScreenData, testLevels as levels, statistics, points};
+export {initialData, InitialState, resultsScreenData, testLevels as levels, statistics, points};

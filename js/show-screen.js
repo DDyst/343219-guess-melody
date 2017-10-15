@@ -61,6 +61,23 @@ const showNextScreen = () => {
   }
 };
 
+// Функция для обработки неверного ответа пользователя
+const handleIncorrectAnswer = () => {
+  playerAnswers.push(points.INCORRECT);
+  gameState.notesLeft--;
+};
+
+// Функция для обработки верного ответа пользователя
+const handleCorrectAnswer = () => {
+  /*
+    Тут должно учитываться время ответа,
+    но пока у нас нет таймера
+    и все ответы будем считать медленными
+  */
+  playerAnswers.push(points.CORRECT_SLOW);
+};
+
+
 // Функция проверки ответов пользователя на экране выбора жанра
 const checkGenreAnswer = (checkboxesElements, answers) => {
   const chosenAnswers = Array.from(checkboxesElements).filter((item) => item.checked);
@@ -68,15 +85,9 @@ const checkGenreAnswer = (checkboxesElements, answers) => {
   const correctAnswersSources = answers.filter((item) => item.correct).map((item) => item.src);
 
   if (chosenTracksSources.length !== correctAnswersSources.length || !areArrayElementsIncludedInAnotherArray(chosenTracksSources, correctAnswersSources)) {
-    playerAnswers.push(points.INCORRECT);
-    gameState.notesLeft--;
+    handleIncorrectAnswer();
   } else {
-    /*
-      Тут должно учитываться время ответа,
-      но пока у нас нет таймера
-      и все ответы будем считать медленными
-    */
-    playerAnswers.push(points.CORRECT_SLOW);
+    handleCorrectAnswer();
   }
 };
 
@@ -86,15 +97,9 @@ const checkArtistAnswer = (chosenAnswer, answers) => {
   const correctAnswer = answers.find((item) => item.correct).artist;
 
   if (chosenArtist !== correctAnswer) {
-    playerAnswers.push(points.INCORRECT);
-    gameState.notesLeft--;
+    handleIncorrectAnswer();
   } else {
-    /*
-      Тут должно учитываться время ответа,
-      но пока у нас нет таймера
-      и все ответы будем считать медленными
-    */
-    playerAnswers.push(points.CORRECT_SLOW);
+    handleCorrectAnswer();
   }
 };
 
