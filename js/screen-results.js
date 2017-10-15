@@ -8,9 +8,7 @@ const createResultsScreenElement = (screenData, statistics, result) => {
   const template = `<section class="main main--result">
     ${logoTemplate}
     <h2 class="title">${screenData.title}</h2>
-
     ${createStatsTemplate(screenData, statistics, result)}
-
     <span role="button" tabindex="0" class="main-replay">${screenData.replay}</span>
   </section>`;
 
