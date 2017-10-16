@@ -1,5 +1,5 @@
 import assert from 'assert';
-import countScore from './count-score.js';
+import {countScore} from './count-score.js';
 
 describe(`Scoring`, () => {
   it(`should return -1 if there are less than 10 answers`, () => {

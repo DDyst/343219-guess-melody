@@ -1,13 +1,15 @@
 // Модуль для отрисовки экранов
 
-import {isEnterPressed, getRandomArrayItem} from './util.js';
+import {isEnterPressed, areArrayElementsIncludedInAnotherArray} from './util.js';
 import welcomeScreenElement from './screen-welcome.js';
-import artistScreenElement from './screen-artist.js';
-import genreScreenElement from './screen-genre.js';
-import successScreenElement from './screen-success.js';
-import timeoutScreenElement from './screen-timeout.js';
-import defeatScreenElement from './screen-defeat.js';
+import createLevelScreenElement from './screen-level.js';
+import createResultsScreenElement from './screen-results.js';
+import {levels as gameLevels, InitialState, resultsScreenData, statistics as othersScore, points} from './data.js';
+import {scoringSetup, countScore, countQuickAnswers} from './count-score.js';
 
+let playerAnswers;
+let levels;
+let gameState;
 const screenContainer = document.querySelector(`.main`);
 
 // Функция для отрисовки нужного экрана на странице
@@ -29,35 +31,82 @@ const showScreen = (screenElement) => {
 };
 
 // Функция для принятия ответа на экране выбора артиста
-const acceptAnswer = (target) => {
+const acceptAnswer = (target, answers) => {
   if (target.closest(`.main-answer`)) {
-    screen.showGenre();
+    checkArtistAnswer(target.closest(`.main-answer`), answers);
+    showNextScreen();
   }
 };
 
 // Функция, проверяющая чекбоксы ответов на экране выбора жанра и блокирующая кнопку отправки формы в случае, если ни один ответ не выбран
-const checkAnswers = (buttonElement, checkboxesElements) => {
+const changeButtonDisability = (buttonElement, checkboxesElements) => {
   buttonElement.disabled = !(Array.from(checkboxesElements).some((item) => item.checked));
+};
+
+// Функция для подготовки данных к началу новой игры
+const startNewGame = () => {
+  gameState = new InitialState();
+  playerAnswers = [];
+  levels = gameLevels.slice();
+};
+
+// Функция для показа следующео экрана во время прохождения игры
+const showNextScreen = () => {
+  if (gameState.notesLeft < 0) {
+    screen.showResult();
+  } else if (levels.length) {
+    screen.showLevel(levels.shift());
+  } else {
+    screen.showResult();
+  }
+};
+
+// Функция для обработки неверного ответа пользователя
+const handleIncorrectAnswer = () => {
+  playerAnswers.push(points.INCORRECT);
+  gameState.notesLeft--;
+};
+
+// Функция для обработки верного ответа пользователя
+const handleCorrectAnswer = () => {
+  /*
+    Тут должно учитываться время ответа,
+    но пока у нас нет таймера
+    и все ответы будем считать медленными
+  */
+  playerAnswers.push(points.CORRECT_SLOW);
+};
+
+
+// Функция проверки ответов пользователя на экране выбора жанра
+const checkGenreAnswer = (checkboxesElements, answers) => {
+  const chosenAnswers = Array.from(checkboxesElements).filter((item) => item.checked);
+  const chosenTracksSources = chosenAnswers.map((item) => item.closest(`.genre-answer`).querySelector(`source`).src);
+  const correctAnswersSources = answers.filter((item) => item.correct).map((item) => item.src);
+
+  if (chosenTracksSources.length !== correctAnswersSources.length || !areArrayElementsIncludedInAnotherArray(chosenTracksSources, correctAnswersSources)) {
+    handleIncorrectAnswer();
+  } else {
+    handleCorrectAnswer();
+  }
+};
+
+// Функция проверки ответов пользователя на экране выбора артиста
+const checkArtistAnswer = (chosenAnswer, answers) => {
+  const chosenArtist = chosenAnswer.querySelector(`.main-answer-preview`).alt;
+  const correctAnswer = answers.find((item) => item.correct).artist;
+
+  if (chosenArtist !== correctAnswer) {
+    handleIncorrectAnswer();
+  } else {
+    handleCorrectAnswer();
+  }
 };
 
 // Обработчики событий
 const startButtonClickHandler = () => {
-  screen.showArtist();
-};
-
-const answersContainerClickHandler = (evt) => {
-  acceptAnswer(evt.target);
-};
-
-const answersContainerKeydownHandler = (evt) => {
-  if (isEnterPressed(evt.keyCode)) {
-    acceptAnswer(evt.target);
-  }
-};
-
-const genreFormSubmitHandler = (evt) => {
-  evt.currentTarget.reset();
-  screen.showResult();
+  startNewGame();
+  screen.showLevel(levels.shift());
 };
 
 const replayButtonClickHandler = () => {
@@ -65,7 +114,7 @@ const replayButtonClickHandler = () => {
 };
 
 const replayButtonKeydownHandler = (evt) => {
-  if (isEnterPressed(evt.keyCode)) {
+  if (isEnterPressed(evt.key)) {
     screen.showWelcome();
   }
 };
@@ -80,34 +129,61 @@ const screen = {
     startButton.addEventListener(`click`, startButtonClickHandler);
   },
 
-  showArtist() {
-    showScreen(artistScreenElement);
+  showLevel(level) {
+    showScreen(createLevelScreenElement(gameState, level));
+    if (level.type === `genre`) {
+      const genreForm = screenContainer.querySelector(`.genre`);
+      const submitButton = screenContainer.querySelector(`.genre-answer-send`);
+      const answersCheckboxes = screenContainer.querySelectorAll(`input[name="answer"]`);
 
-    const answersContainer = screenContainer.querySelector(`.main-list`);
+      const genreFormChangeHandler = () => {
+        changeButtonDisability(submitButton, answersCheckboxes);
+      };
 
-    answersContainer.addEventListener(`click`, answersContainerClickHandler);
-    answersContainer.addEventListener(`keydown`, answersContainerKeydownHandler);
-  },
+      const genreFormSubmitHandler = (evt) => {
+        checkGenreAnswer(answersCheckboxes, level.answers);
+        evt.currentTarget.reset();
+        showNextScreen();
+      };
 
-  showGenre() {
-    showScreen(genreScreenElement);
+      submitButton.disabled = true;
 
-    const genreForm = screenContainer.querySelector(`.genre`);
-    const submitButton = screenContainer.querySelector(`.genre-answer-send`);
-    const answersCheckboxes = screenContainer.querySelectorAll(`input[name="answer"]`);
+      genreForm.addEventListener(`change`, genreFormChangeHandler, true);
+      genreForm.addEventListener(`submit`, genreFormSubmitHandler);
+    } else {
+      const answersContainer = screenContainer.querySelector(`.main-list`);
 
-    const genreFormChangeHandler = () => {
-      checkAnswers(submitButton, answersCheckboxes);
-    };
+      const answersContainerClickHandler = (evt) => {
+        acceptAnswer(evt.target, level.answers);
+      };
 
-    submitButton.disabled = true;
+      const answersContainerKeydownHandler = (evt) => {
+        if (isEnterPressed(evt.key)) {
+          acceptAnswer(evt.target, level.answers);
+        }
+      };
 
-    genreForm.addEventListener(`change`, genreFormChangeHandler, true);
-    genreForm.addEventListener(`submit`, genreFormSubmitHandler);
+      answersContainer.addEventListener(`click`, answersContainerClickHandler);
+      answersContainer.addEventListener(`keydown`, answersContainerKeydownHandler);
+    }
   },
 
   showResult() {
-    showScreen(getRandomArrayItem([successScreenElement, timeoutScreenElement, defeatScreenElement]));
+    /*
+      Не вижу смысла создавать отдельную структуру данных под результаты игрока,
+      т.к. наш объект с состоянием игры и так содержит почти всю необходимую информацию.
+      Остаётся только добавить в него недостающие поля: количество набранных баллов и быстрых ответов.
+    */
+    gameState.score = countScore(playerAnswers);
+    gameState.quickAnswers = countQuickAnswers(playerAnswers);
+
+    if (!gameState.timeLeft) {
+      showScreen(createResultsScreenElement(resultsScreenData.timeout, othersScore.slice(), gameState));
+    } else if (gameState.score === scoringSetup.FAILURE_SCORE) {
+      showScreen(createResultsScreenElement(resultsScreenData.defeat, othersScore.slice(), gameState));
+    } else {
+      showScreen(createResultsScreenElement(resultsScreenData.success, othersScore.slice(), gameState));
+    }
 
     const replayButton = screenContainer.querySelector(`.main-replay`);
 

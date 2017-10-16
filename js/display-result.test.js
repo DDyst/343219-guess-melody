@@ -8,7 +8,7 @@ describe(`Results output`, () => {
       notesLeft: 3,
       timeLeft: 0
     };
-    assert.equal(displayResult([1, 2, 1], playerResult), `Время вышло! Вы не успели отгадать все мелодии`);
+    assert.equal(displayResult([1, 2, 1], playerResult), `Время вышло!<br>Вы не успели отгадать все мелодии`);
   });
 
   it(`should respond to the failure of all attempts correctly`, () => {
@@ -17,7 +17,7 @@ describe(`Results output`, () => {
       notesLeft: 0,
       timeLeft: 40
     };
-    assert.equal(displayResult([7, 20, 13, 9], playerResult), `У вас закончились все попытки. Ничего, повезёт в следующий раз!`);
+    assert.equal(displayResult([7, 20, 13, 9], playerResult), `У вас закончились все попытки.<br>Ничего, повезёт в следующий раз!`);
   });
 
   it(`should respond to the success correctly`, () => {
