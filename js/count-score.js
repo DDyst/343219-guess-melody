@@ -4,7 +4,7 @@ import {points} from './data.js';
 
 // Объект с установками для подсчёта очков
 const scoringSetup = {
-  SCREENS_NUMBER: 10,
+  SCREENS_NUMBER: 10, // вместо этого использовать длину массива уровней
   FAILURE_SCORE: -1
 };
 

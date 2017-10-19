@@ -1,14 +1,16 @@
 // Модуль для создания части шаблона, отвечающей за отрисовку итоговой статистики игры
 
 import displayResult from './display-result.js';
-import {initialData} from './data.js';
-import declension from './declension.js';
+import {initialData, declinationForms} from './data.js';
+import changeDeclination from './change-declination.js';
+
+const {minutes: minutes, seconds: seconds, points: points, quick: quick, mistakes: mistakes} = declinationForms;
 
 const createStatsTemplate = (screenData, statistics, result) => screenData.failure
   ? `<div class="main-stat">${displayResult(statistics, result)}</div>`
-  : `<div class="main-stat">За&nbsp;${result.getMinutes()}&nbsp;${declension.adjustMinutes(result.getMinutes())} и ${result.getSeconds()}&nbsp;${declension.adjustSeconds(result.getSeconds())}
-      <br>вы&nbsp;набрали ${result.score} ${declension.adjustScore(result.score)} (${result.quickAnswers} ${declension.adjustQuickAnswers(result.quickAnswers)})
-      <br>совершив ${initialData.notes - result.notesLeft} ${declension.adjustMistakes(initialData.notes - result.notesLeft)}
+  : `<div class="main-stat">За&nbsp;${changeDeclination(result.getMinutes(), minutes)} и ${changeDeclination(result.getSeconds(), seconds)}
+      <br>вы&nbsp;набрали ${changeDeclination(result.score, points)} (${changeDeclination(result.quickAnswers, quick, true)})
+      <br>совершив ${changeDeclination(initialData.notes - result.notesLeft, mistakes)}
     </div>
     <span class="main-comparison">${displayResult(statistics, result)}</span>`;
 

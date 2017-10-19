@@ -17,7 +17,45 @@ const initialData = {
   time: 300,
   notes: 3,
   get minutes() {
-    return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
+    return Math.floor(this.time / SECONDS_PER_MINUTE);
+  }
+};
+
+// Объект с формами склоняемых слов
+const declinationForms = {
+  mistakes: {
+    single: `ошибку`,
+    few: `ошибки`,
+    many: `ошибок`
+  },
+
+  points: {
+    single: `балл`,
+    few: `балла`,
+    many: `баллов`
+  },
+
+  minutes: {
+    single: `минуту`,
+    few: `минуты`,
+    many: `минут`
+  },
+
+  seconds: {
+    single: `секунду`,
+    few: `секунды`,
+    many: `секунд`
+  },
+
+  times: {
+    single: `раз`,
+    few: `раза`,
+    many: `раз`
+  },
+
+  quick: {
+    single: `быстрый`,
+    many: `быстрых`
   }
 };
 
@@ -279,4 +317,4 @@ const testLevels = [
   }
 ];
 
-export {initialData, InitialState, resultsScreenData, testLevels as levels, statistics, points};
+export {initialData, InitialState, resultsScreenData, testLevels as levels, statistics, points, declinationForms};
