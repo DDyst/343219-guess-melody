@@ -1,6 +1,6 @@
 // Модуль для создания части шаблона, отвечающей за отрисовку состояния игры
 
-import {InitialState} from './data.js';
+import {initialData} from '../data.js';
 
 const createStateTemplate = (state) => `\
 <svg xmlns="http://www.w3.org/2000/svg" class="timer" viewBox="0 0 780 780">
@@ -15,7 +15,7 @@ const createStateTemplate = (state) => `\
   </div>
 </svg>
 <div class="main-mistakes">
-  ${new Array(new InitialState().notesLeft - state.notesLeft).fill(`<img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">`).join(``)}
+  ${new Array(initialData.notes - state.notesLeft).fill(`<img class="main-mistake" src="img/wrong-answer.png" width="35" height="49">`).join(``)}
 </div>
 `;
 

@@ -1,14 +1,14 @@
 // Модуль для создания части шаблона, отвечающей за отрисовку итоговой статистики игры
 
-import displayResult from './display-result.js';
-import {initialData, declinationForms} from './data.js';
-import changeDeclination from './change-declination.js';
+import displayResult from '../display-result.js';
+import {initialData, declinationForms} from '../data.js';
+import changeDeclination from '../change-declination.js';
 
-const {minutes: minutes, seconds: seconds, points: points, quick: quick, mistakes: mistakes} = declinationForms;
+const {minutes, seconds, points, quick, mistakes} = declinationForms;
 
 const createStatsTemplate = (screenData, statistics, result) => screenData.failure
   ? `<div class="main-stat">${displayResult(statistics, result)}</div>`
-  : `<div class="main-stat">За&nbsp;${changeDeclination(result.getMinutes(), minutes)} и ${changeDeclination(result.getSeconds(), seconds)}
+  : `<div class="main-stat">За&nbsp;${changeDeclination(result.minutes, minutes)} и ${changeDeclination(result.seconds, seconds)}
       <br>вы&nbsp;набрали ${changeDeclination(result.score, points)} (${changeDeclination(result.quickAnswers, quick, true)})
       <br>совершив ${changeDeclination(initialData.notes - result.notesLeft, mistakes)}
     </div>

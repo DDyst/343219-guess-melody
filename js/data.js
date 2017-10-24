@@ -1,12 +1,41 @@
 // Модуль с данными игры
 
 import audio from './audio.js';
+import createArtistLevelView from './artist-level.js';
+import createGenreLevelView from './genre-level.js';
 
 const SECONDS_PER_MINUTE = 60;
 const SMALLEST_TWO_DIGIT_NUMBER = 10;
+const FAILURE_SCORE = -1;
+
+// Перечисление возможных статусов завершенной игры
+const ResultStatuses = {
+  SUCCESS: `success`,
+  TIMEOUT: `timeout`,
+  DEFEAT: `defeat`
+};
+
+// Объект с данными экрана результатов
+const resultsScreenData = {
+  success: {
+    title: `Вы настоящий меломан!`,
+    replay: `Сыграть ещё раз`,
+    failure: false
+  },
+  timeout: {
+    title: `Увы и ах!`,
+    replay: `Попробовать ещё раз`,
+    failure: true
+  },
+  defeat: {
+    title: `Какая жалость!`,
+    replay: `Попробовать ещё раз`,
+    failure: true
+  }
+};
 
 // Объект с данными о количестве баллов, присуждаемых за ответ игрока
-const points = {
+const Points = {
   CORRECT_QUICK: 2,
   CORRECT_SLOW: 1,
   INCORRECT: -2
@@ -19,6 +48,12 @@ const initialData = {
   get minutes() {
     return Math.floor(this.time / SECONDS_PER_MINUTE);
   }
+};
+
+// Объект с соотношением типов уровней и создающих их представление функций
+const levelViews = {
+  genre: createGenreLevelView,
+  artist: createArtistLevelView
 };
 
 // Объект с формами склоняемых слов
@@ -59,44 +94,35 @@ const declinationForms = {
   }
 };
 
-// Объект с данными экрана результатов
-const resultsScreenData = {
-  success: {
-    title: `Вы настоящий меломан!`,
-    replay: `Сыграть ещё раз`,
-    failure: false
-  },
-  timeout: {
-    title: `Увы и ах!`,
-    replay: `Попробовать ещё раз`,
-    failure: true
-  },
-  defeat: {
-    title: `Какая жалость!`,
-    replay: `Попробовать ещё раз`,
-    failure: true
-  }
-};
-
 // Список баллов, набранных другими игроками
 const statistics = [10, 12, 8, 5, 9, 2];
 
-// Изначальное состояние игры
-const InitialState = function () {
-  this.timeLeft = initialData.time;
-  this.notesLeft = initialData.notes;
-};
+// Состояние игры
+class GameState {
+  constructor() {
+    this.timeLeft = initialData.time;
+    this.notesLeft = initialData.notes;
+  }
 
-InitialState.prototype = {
-  getMinutes() {
+  get minutes() {
     return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
-  },
+  }
 
-  getSeconds() {
+  get seconds() {
     const secondsLeft = this.timeLeft % SECONDS_PER_MINUTE;
     return (secondsLeft >= SMALLEST_TWO_DIGIT_NUMBER) ? secondsLeft : `0${secondsLeft}`;
   }
-};
+
+  tick() {
+    if (this.timeLeft > 0) {
+      this.timeLeft--;
+    }
+    if (this.timeLeft === 0) {
+      return false;
+    }
+    return true;
+  }
+}
 
 // Объект с данными уровней
 const testLevels = [
@@ -317,4 +343,4 @@ const testLevels = [
   }
 ];
 
-export {initialData, InitialState, resultsScreenData, testLevels as levels, statistics, points, declinationForms};
+export {initialData, GameState, resultsScreenData, testLevels as levels, statistics, Points, declinationForms, levelViews, ResultStatuses, FAILURE_SCORE};

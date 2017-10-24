@@ -1,17 +1,19 @@
 // Модуль создания таймера
 
-const Timer = function (time) {
-  this.time = time;
-};
+class Timer {
+  constructor(time) {
+    this.time = time;
+  }
 
-Timer.prototype.tick = function () {
-  if (this.time > 0) {
-    this.time--;
+  tick() {
+    if (this.time > 0) {
+      this.time--;
+    }
+    if (this.time === 0) {
+      return false;
+    }
+    return true;
   }
-  if (this.time === 0) {
-    return false;
-  }
-  return true;
-};
+}
 
 export default Timer;
