@@ -1,8 +1,9 @@
 // Модуль для смены экранов и обработки ответов пользователя
 
 import createResultsView from './results.js';
-import {levels as gameLevels, GameState, Points, levelViews} from './data.js';
+import {levels as gameLevels, GameState, Points} from './data.js';
 import {areArrayElementsIncludedInAnotherArray} from './util.js';
+import levelRepresentation from './level-representation.js';
 
 let playerAnswers;
 let levels;
@@ -53,7 +54,7 @@ const showNextScreen = () => {
     changeView(createResultsView(gameState, playerAnswers));
   } else if (levels.length) {
     const nextLevel = levels.shift();
-    changeView(levelViews[nextLevel.type](gameState, nextLevel));
+    changeView(levelRepresentation[nextLevel.type](gameState, nextLevel));
   } else {
     changeView(createResultsView(gameState, playerAnswers));
   }

@@ -1,8 +1,6 @@
 // Модуль с данными игры
 
 import audio from './audio.js';
-import createArtistLevelView from './artist-level.js';
-import createGenreLevelView from './genre-level.js';
 
 const SECONDS_PER_MINUTE = 60;
 const SMALLEST_TWO_DIGIT_NUMBER = 10;
@@ -48,12 +46,6 @@ const initialData = {
   get minutes() {
     return Math.floor(this.time / SECONDS_PER_MINUTE);
   }
-};
-
-// Объект с соотношением типов уровней и создающих их представление функций
-const levelViews = {
-  genre: createGenreLevelView,
-  artist: createArtistLevelView
 };
 
 // Объект с формами склоняемых слов
@@ -343,4 +335,4 @@ const testLevels = [
   }
 ];
 
-export {initialData, GameState, resultsScreenData, testLevels as levels, statistics, Points, declinationForms, levelViews, ResultStatuses, FAILURE_SCORE};
+export {initialData, GameState, resultsScreenData, testLevels as levels, statistics, Points, declinationForms, ResultStatuses, FAILURE_SCORE};
