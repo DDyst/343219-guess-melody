@@ -49,18 +49,27 @@ class ArtistLevelView extends AbstractView {
     const answersContainer = this.element.querySelector(`.main-list`);
 
     answersContainer.addEventListener(`click`, (evt) => {
-      this.choiceHandler(evt.target, this.level.answers);
+      this.choiceHandler(evt.target.closest(`.main-answer`), this.level.answers);
     });
 
     answersContainer.addEventListener(`keydown`, (evt) => {
       if (isEnterPressed(evt.key)) {
-        this.choiceHandler(evt.target, this.level.answers);
+        this.choiceHandler(evt.target.closest(`.main-answer`), this.level.answers);
       }
     });
   }
 
   choiceHandler() {
 
+  }
+
+  identifyArtist(ancestorElement) {
+    return ancestorElement.querySelector(`.main-answer-preview`).alt;
+  }
+
+  updateTime() {
+    this.element.querySelector(`.timer-value-mins`).textContent = this.state.minutes;
+    this.element.querySelector(`.timer-value-secs`).textContent = this.state.seconds;
   }
 }
 

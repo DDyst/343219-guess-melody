@@ -6,7 +6,7 @@ import {changeView} from './change-view.js';
 import {countScore, countQuickAnswers} from './count-score.js';
 import {FAILURE_SCORE, resultsScreenData, statistics, ResultStatuses} from './data.js';
 
-const createResultsView = (result, playerAnswers) => {
+const createResultsView = (result, playerAnswers = []) => {
   result.score = countScore(playerAnswers);
   result.quickAnswers = countQuickAnswers(playerAnswers);
 

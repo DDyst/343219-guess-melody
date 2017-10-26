@@ -5,6 +5,7 @@ import audio from './audio.js';
 const SECONDS_PER_MINUTE = 60;
 const SMALLEST_TWO_DIGIT_NUMBER = 10;
 const FAILURE_SCORE = -1;
+const QUICK_ANSWER_TIME = 30;
 
 // Перечисление возможных статусов завершенной игры
 const ResultStatuses = {
@@ -100,19 +101,17 @@ class GameState {
     return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
   }
 
+  get minutesSpent() {
+    return Math.floor((initialData.time - this.timeLeft) / SECONDS_PER_MINUTE);
+  }
+
   get seconds() {
     const secondsLeft = this.timeLeft % SECONDS_PER_MINUTE;
     return (secondsLeft >= SMALLEST_TWO_DIGIT_NUMBER) ? secondsLeft : `0${secondsLeft}`;
   }
 
-  tick() {
-    if (this.timeLeft > 0) {
-      this.timeLeft--;
-    }
-    if (this.timeLeft === 0) {
-      return false;
-    }
-    return true;
+  get secondsSpent() {
+    return (initialData.time - this.timeLeft) % SECONDS_PER_MINUTE;
   }
 }
 
@@ -335,4 +334,4 @@ const testLevels = [
   }
 ];
 
-export {initialData, GameState, resultsScreenData, testLevels as levels, statistics, Points, declinationForms, ResultStatuses, FAILURE_SCORE};
+export {initialData, GameState, resultsScreenData, testLevels as levels, statistics, Points, declinationForms, ResultStatuses, FAILURE_SCORE, QUICK_ANSWER_TIME};

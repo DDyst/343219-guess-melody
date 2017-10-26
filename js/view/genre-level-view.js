@@ -54,7 +54,10 @@ class GenreLevelView extends AbstractView {
     }, true);
 
     form.addEventListener(`submit`, (evt) => {
-      this.formSubmitHandler(evt.currentTarget, answersCheckboxes, this.level.answers);
+      const chosenAnswers = Array.from(answersCheckboxes).filter((item) => item.checked);
+      const chosenTracksSources = chosenAnswers.map((item) => item.closest(`.genre-answer`).querySelector(`source`).src);
+
+      this.formSubmitHandler(evt.currentTarget, chosenTracksSources, this.level.answers);
     });
   }
 
@@ -64,6 +67,16 @@ class GenreLevelView extends AbstractView {
 
   formSubmitHandler() {
 
+  }
+
+  // Функция, проверяющая чекбоксы ответов на экране выбора жанра и блокирующая кнопку отправки формы в случае, если ни один ответ не выбран
+  changeButtonDisability(buttonElement, checkboxesElements) {
+    buttonElement.disabled = !(Array.from(checkboxesElements).some((item) => item.checked));
+  }
+
+  updateTime() {
+    this.element.querySelector(`.timer-value-mins`).textContent = this.state.minutes;
+    this.element.querySelector(`.timer-value-secs`).textContent = this.state.seconds;
   }
 }
 

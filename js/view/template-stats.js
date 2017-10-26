@@ -8,7 +8,7 @@ const {minutes, seconds, points, quick, mistakes} = declinationForms;
 
 const createStatsTemplate = (screenData, statistics, result) => screenData.failure
   ? `<div class="main-stat">${displayResult(statistics, result)}</div>`
-  : `<div class="main-stat">За&nbsp;${changeDeclination(result.minutes, minutes)} и ${changeDeclination(result.seconds, seconds)}
+  : `<div class="main-stat">За&nbsp;${changeDeclination(result.minutesSpent, minutes)} и ${changeDeclination(result.secondsSpent, seconds)}
       <br>вы&nbsp;набрали ${changeDeclination(result.score, points)} (${changeDeclination(result.quickAnswers, quick, true)})
       <br>совершив ${changeDeclination(initialData.notes - result.notesLeft, mistakes)}
     </div>
