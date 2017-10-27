@@ -4,21 +4,14 @@ import audio from './audio.js';
 
 const SECONDS_PER_MINUTE = 60;
 const SMALLEST_TWO_DIGIT_NUMBER = 10;
+const FAILURE_SCORE = -1;
+const QUICK_ANSWER_TIME = 30;
 
-// Объект с данными о количестве баллов, присуждаемых за ответ игрока
-const points = {
-  CORRECT_QUICK: 2,
-  CORRECT_SLOW: 1,
-  INCORRECT: -2
-};
-
-// Объект с исходными условиями игры
-const initialData = {
-  time: 300,
-  notes: 3,
-  get minutes() {
-    return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
-  }
+// Перечисление возможных статусов завершенной игры
+const ResultStatuses = {
+  SUCCESS: `success`,
+  TIMEOUT: `timeout`,
+  DEFEAT: `defeat`
 };
 
 // Объект с данными экрана результатов
@@ -40,25 +33,87 @@ const resultsScreenData = {
   }
 };
 
+// Объект с данными о количестве баллов, присуждаемых за ответ игрока
+const Points = {
+  CORRECT_QUICK: 2,
+  CORRECT_SLOW: 1,
+  INCORRECT: -2
+};
+
+// Объект с исходными условиями игры
+const initialData = {
+  time: 300,
+  notes: 3,
+  get minutes() {
+    return Math.floor(this.time / SECONDS_PER_MINUTE);
+  }
+};
+
+// Объект с формами склоняемых слов
+const declinationForms = {
+  mistakes: {
+    single: `ошибку`,
+    few: `ошибки`,
+    many: `ошибок`
+  },
+
+  points: {
+    single: `балл`,
+    few: `балла`,
+    many: `баллов`
+  },
+
+  minutes: {
+    single: `минуту`,
+    few: `минуты`,
+    many: `минут`
+  },
+
+  seconds: {
+    single: `секунду`,
+    few: `секунды`,
+    many: `секунд`
+  },
+
+  times: {
+    single: `раз`,
+    few: `раза`,
+    many: `раз`
+  },
+
+  quick: {
+    single: `быстрый`,
+    many: `быстрых`
+  }
+};
+
 // Список баллов, набранных другими игроками
 const statistics = [10, 12, 8, 5, 9, 2];
 
-// Изначальное состояние игры
-const InitialState = function () {
-  this.timeLeft = initialData.time;
-  this.notesLeft = initialData.notes;
-};
+// Состояние игры
+class GameState {
+  constructor() {
+    this.timeLeft = initialData.time;
+    this.notesLeft = initialData.notes;
+  }
 
-InitialState.prototype = {
-  getMinutes() {
+  get minutes() {
     return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
-  },
+  }
 
-  getSeconds() {
+  get minutesSpent() {
+    return Math.floor((initialData.time - this.timeLeft) / SECONDS_PER_MINUTE);
+  }
+
+  get seconds() {
     const secondsLeft = this.timeLeft % SECONDS_PER_MINUTE;
     return (secondsLeft >= SMALLEST_TWO_DIGIT_NUMBER) ? secondsLeft : `0${secondsLeft}`;
   }
-};
+
+  get secondsSpent() {
+    return (initialData.time - this.timeLeft) % SECONDS_PER_MINUTE;
+  }
+}
 
 // Объект с данными уровней
 const testLevels = [
@@ -279,4 +334,4 @@ const testLevels = [
   }
 ];
 
-export {initialData, InitialState, resultsScreenData, testLevels as levels, statistics, points};
+export {initialData, GameState, resultsScreenData, testLevels as levels, statistics, Points, declinationForms, ResultStatuses, FAILURE_SCORE, QUICK_ANSWER_TIME};

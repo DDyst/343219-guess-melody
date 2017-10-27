@@ -1,17 +1,19 @@
-// Модуль создания таймера
+// Модуль таймера
 
-const Timer = function (time) {
-  this.time = time;
+import {changeView} from './change-view.js';
+import createResultsView from './results';
+
+const createTimer = (view) => {
+  const timer = window.setInterval(() => {
+    if (view.state.timeLeft > 0) {
+      view.state.timeLeft--;
+      view.updateTime();
+    } else {
+      window.clearInterval(timer);
+      changeView(createResultsView(view.state));
+    }
+  }, 1000);
+  return timer;
 };
 
-Timer.prototype.tick = function () {
-  if (this.time > 0) {
-    this.time--;
-  }
-  if (this.time === 0) {
-    return false;
-  }
-  return true;
-};
-
-export default Timer;
+export default createTimer;

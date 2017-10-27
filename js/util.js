@@ -23,23 +23,6 @@ const getPercentageOfSmallerNumbers = (allNumbers, ourNumber) => {
 // Функция, находящая количество элементов в массиве чисел, больших, чем переданное число
 const getGreaterNumbersQuantity = (allNumbers, ourNumber) => allNumbers.filter((item) => item > ourNumber).length;
 
-// Функция для копирования объектов
-// const cloneObject = (source) => {
-//   let value;
-//   const clone = Object.create(source);
-//   for (const key in source) {
-//     if (source.hasOwnProperty(key)) {
-//       value = source[key];
-//       if (value !== null && typeof value === `object`) {
-//         clone[key] = cloneObject(value);
-//       } else {
-//         clone[key] = value;
-//       }
-//     }
-//   }
-//   return clone;
-// };
-
 // Функция определяет, включены ли все элементы одного массива в другой
 const areArrayElementsIncludedInAnotherArray = (array, anotherArray) => array.reduce((acc, item) => acc * anotherArray.includes(item), true);
 

@@ -1,5 +1,6 @@
 // Основной модуль
 
-import screen from './show-screen.js';
+import {changeView} from './change-view.js';
+import createWelcomeView from './welcome.js';
 
-screen.showWelcome();
+changeView(createWelcomeView());
