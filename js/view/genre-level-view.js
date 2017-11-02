@@ -4,10 +4,9 @@ import AbstractView from './abstract-view.js';
 import createStateTemplate from './template-game-state.js';
 
 class GenreLevelView extends AbstractView {
-  constructor(state, level) {
+  constructor(state) {
     super();
     this.state = state;
-    this.level = level;
   }
 
   get template() {
@@ -16,10 +15,10 @@ class GenreLevelView extends AbstractView {
       ${createStateTemplate(this.state)}
 
       <div class="main-wrap">
-        <h2 class="title">Выберите ${this.level.genre} треки</h2>
+        <h2 class="title">Выберите ${this.state.level.genre} треки</h2>
         <form class="genre">
 
-          ${this.level.answers.map((item, index) => `<div class="genre-answer">
+          ${this.state.level.answers.map((item, index) => `<div class="genre-answer">
             <div class="player-wrapper">
               <div class="player">
                 <audio>
@@ -56,13 +55,13 @@ class GenreLevelView extends AbstractView {
     form.addEventListener(`submit`, (evt) => {
       const chosenAnswers = Array.from(answersCheckboxes).filter((item) => item.checked);
       const chosenTracksSources = chosenAnswers.map((item) => item.closest(`.genre-answer`).querySelector(`source`).src);
-
-      this.formSubmitHandler(evt.currentTarget, chosenTracksSources, this.level.answers);
+      evt.preventDefault();
+      this.formSubmitHandler(evt.currentTarget, chosenTracksSources, this.state.level.answers);
     });
   }
 
-  formChangeHandler() {
-
+  formChangeHandler(buttonElement, checkboxesElements) {
+    this.changeButtonDisability(buttonElement, checkboxesElements);
   }
 
   formSubmitHandler() {

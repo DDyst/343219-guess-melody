@@ -1,26 +1,50 @@
 // Модуль для создания представления экрана игры на выбор жанра и управления им
 
 import GenreLevelView from './view/genre-level-view.js';
-import {checkGenreAnswer, showNextScreen} from './change-view.js';
-import createTimer from './timer.js';
+import changeView from './view/change-view.js';
+import Application from './application.js';
+import GameState from './model/game-state.js';
 
-const createGenreLevelView = (state, level) => {
-  const genreLevelView = new GenreLevelView(state, level);
-  const startTime = state.timeLeft;
-  const timer = createTimer(genreLevelView);
+class GenreLevelScreen {
+  constructor() {
+    this.state = new GameState();
+    this.view = new GenreLevelView(this.state);
+  }
 
-  genreLevelView.formChangeHandler = (button, checkboxes) => {
-    genreLevelView.changeButtonDisability(button, checkboxes);
-  };
+  init(state) {
+    this.startTime = state.timeLeft;
+    this.state = state;
+    this.view = new GenreLevelView(this.state);
+    this.view.formSubmitHandler = (form, chosenTracksSources, answers) => {
+      this.stopTimer();
+      this.state.checkGenreAnswer(chosenTracksSources, answers, this.startTime);
+      form.reset();
+      this.showNextScreen();
+    };
+    changeView(this.view);
+    this.tick();
+  }
 
-  genreLevelView.formSubmitHandler = (form, chosenTracksSources, answers) => {
-    window.clearInterval(timer);
-    checkGenreAnswer(chosenTracksSources, answers, startTime);
-    form.reset();
-    showNextScreen();
-  };
+  showNextScreen() {
+    if (this.state.notes < 0) {
+      Application.showResults(this.state);
+    } else if (this.state.levels.length) {
+      this.state.setNextLevel();
+      Application.showLevel(this.state);
+    } else {
+      Application.showResults(this.state);
+    }
+  }
 
-  return genreLevelView;
-};
+  tick() {
+    this.state.tick();
+    this.view.updateTime();
+    this.timer = window.setTimeout(() => this.tick(), 1000);
+  }
 
-export default createGenreLevelView;
+  stopTimer() {
+    window.clearTimeout(this.timer);
+  }
+}
+
+export default new GenreLevelScreen();
