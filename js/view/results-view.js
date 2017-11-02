@@ -3,7 +3,7 @@
 import AbstractView from './abstract-view.js';
 import logoTemplate from './template-logo.js';
 import createStatsTemplate from './template-stats.js';
-import {isEnterPressed} from '../util.js';
+import {isEnterPressed} from '../model/util.js';
 
 class ResultsView extends AbstractView {
   constructor(screenData, statistics, result) {

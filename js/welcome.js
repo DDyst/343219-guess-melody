@@ -1,17 +1,23 @@
 // Модуль для создания представления экрана приветствия и управления им
 
 import WelcomeView from './view/welcome-view.js';
-import {startNewGame, showNextScreen} from './change-view.js';
+import changeView from './view/change-view.js';
+import Application from './application.js';
 
-const createWelcomeView = () => {
-  const welcomeView = new WelcomeView();
+class WelcomeScreen {
+  constructor() {
+    this.view = new WelcomeView();
+    this.view.startButtonClickHandler = () => this.startButtonClickHandler();
+  }
 
-  welcomeView.startButtonClickHandler = () => {
-    startNewGame();
-    showNextScreen();
-  };
+  init(state) {
+    this.state = state;
+    changeView(this.view);
+  }
 
-  return welcomeView;
-};
+  startButtonClickHandler() {
+    Application.showLevel(this.state);
+  }
+}
 
-export default createWelcomeView;
+export default new WelcomeScreen();

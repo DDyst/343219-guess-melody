@@ -1,6 +1,6 @@
 // Модуль базового класса для представления экранов
 
-import getElementFromTemplate from '../get-element.js';
+import getElementFromTemplate from './get-element.js';
 
 class AbstractView {
   get template() {

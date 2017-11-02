@@ -2,8 +2,8 @@
 
 import AbstractView from './abstract-view.js';
 import logoTemplate from './template-logo.js';
-import {initialData, declinationForms} from '../data.js';
-import changeDeclination from '../change-declination.js';
+import {initialData, declinationForms} from '../model/data.js';
+import changeDeclination from '../model/change-declination.js';
 
 class WelcomeView extends AbstractView {
   get template() {

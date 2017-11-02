@@ -24,6 +24,6 @@ const getPercentageOfSmallerNumbers = (allNumbers, ourNumber) => {
 const getGreaterNumbersQuantity = (allNumbers, ourNumber) => allNumbers.filter((item) => item > ourNumber).length;
 
 // Функция определяет, включены ли все элементы одного массива в другой
-const areArrayElementsIncludedInAnotherArray = (array, anotherArray) => array.reduce((acc, item) => acc * anotherArray.includes(item), true);
+const areArrayElementsIncludedInAnotherArray = (array, anotherArray) => array.every((item) => anotherArray.includes(item));
 
 export {isEnterPressed, getRandomArrayItem, getPercentageOfSmallerNumbers, getGreaterNumbersQuantity, areArrayElementsIncludedInAnotherArray};

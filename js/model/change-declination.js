@@ -1,7 +1,7 @@
 // Модуль для регулировония форм склонения слов
 
 // Функция, изменяющая склонение существительных и прилагательных в зависимости от числа, работает со значениями в пределах 100
-const changeDeclination = (value, {single: single, few: few, many: many}, adjective = false) => {
+const changeDeclination = (value, {single, few, many}, adjective = false) => {
   const lastChar = value.toString().charAt(value.toString().length - 1);
   let correctForm;
 

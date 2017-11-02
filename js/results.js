@@ -1,30 +1,32 @@
 // Модуль для создания представления экрана результатов и управления им
 
 import ResultsView from './view/results-view.js';
-import createWelcomeView from './welcome.js';
-import {changeView} from './change-view.js';
-import {countScore, countQuickAnswers} from './count-score.js';
-import {FAILURE_SCORE, resultsScreenData, statistics, ResultStatuses} from './data.js';
+import changeView from './view/change-view.js';
+import {countScore, countQuickAnswers} from './model/count-score.js';
+import {FAILURE_SCORE, resultsScreenData, statistics, ResultStatuses} from './model/data.js';
+import Application from './application.js';
 
-const createResultsView = (result, playerAnswers = []) => {
-  result.score = countScore(playerAnswers);
-  result.quickAnswers = countQuickAnswers(playerAnswers);
+class ResultsScreen {
+  init(state) {
+    state.score = countScore(state.playerAnswers);
+    state.quickAnswers = countQuickAnswers(state.playerAnswers);
 
-  if (!result.timeLeft) {
-    result.status = ResultStatuses.TIMEOUT;
-  } else if (result.score === FAILURE_SCORE) {
-    result.status = ResultStatuses.DEFEAT;
-  } else {
-    result.status = ResultStatuses.SUCCESS;
+    if (!state.timeLeft) {
+      state.status = ResultStatuses.TIMEOUT;
+    } else if (state.score === FAILURE_SCORE) {
+      state.status = ResultStatuses.DEFEAT;
+    } else {
+      state.status = ResultStatuses.SUCCESS;
+    }
+
+    this.view = new ResultsView(resultsScreenData[state.status], statistics.slice(), state);
+
+    this.view.replayButtonClickHandler = () => {
+      Application.showWelcome();
+    };
+
+    changeView(this.view);
   }
+}
 
-  const resultsView = new ResultsView(resultsScreenData[result.status], statistics.slice(), result);
-
-  resultsView.replayButtonClickHandler = () => {
-    changeView(createWelcomeView());
-  };
-
-  return resultsView;
-};
-
-export default createResultsView;
+export default new ResultsScreen();

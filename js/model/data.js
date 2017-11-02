@@ -40,15 +40,6 @@ const Points = {
   INCORRECT: -2
 };
 
-// Объект с исходными условиями игры
-const initialData = {
-  time: 300,
-  notes: 3,
-  get minutes() {
-    return Math.floor(this.time / SECONDS_PER_MINUTE);
-  }
-};
-
 // Объект с формами склоняемых слов
 const declinationForms = {
   mistakes: {
@@ -90,33 +81,33 @@ const declinationForms = {
 // Список баллов, набранных другими игроками
 const statistics = [10, 12, 8, 5, 9, 2];
 
-// Состояние игры
-class GameState {
-  constructor() {
-    this.timeLeft = initialData.time;
-    this.notesLeft = initialData.notes;
-  }
+// // Состояние игры
+// class GameState {
+//   constructor() {
+//     this.timeLeft = initialData.time;
+//     this.notesLeft = initialData.notes;
+//   }
 
-  get minutes() {
-    return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
-  }
+//   get minutes() {
+//     return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
+//   }
 
-  get minutesSpent() {
-    return Math.floor((initialData.time - this.timeLeft) / SECONDS_PER_MINUTE);
-  }
+//   get minutesSpent() {
+//     return Math.floor((initialData.time - this.timeLeft) / SECONDS_PER_MINUTE);
+//   }
 
-  get seconds() {
-    const secondsLeft = this.timeLeft % SECONDS_PER_MINUTE;
-    return (secondsLeft >= SMALLEST_TWO_DIGIT_NUMBER) ? secondsLeft : `0${secondsLeft}`;
-  }
+//   get seconds() {
+//     const secondsLeft = this.timeLeft % SECONDS_PER_MINUTE;
+//     return (secondsLeft >= SMALLEST_TWO_DIGIT_NUMBER) ? secondsLeft : `0${secondsLeft}`;
+//   }
 
-  get secondsSpent() {
-    return (initialData.time - this.timeLeft) % SECONDS_PER_MINUTE;
-  }
-}
+//   get secondsSpent() {
+//     return (initialData.time - this.timeLeft) % SECONDS_PER_MINUTE;
+//   }
+// }
 
 // Объект с данными уровней
-const testLevels = [
+const levels = [
   {
     type: `genre`,
     genre: `Rock`,
@@ -334,4 +325,13 @@ const testLevels = [
   }
 ];
 
-export {initialData, GameState, resultsScreenData, testLevels as levels, statistics, Points, declinationForms, ResultStatuses, FAILURE_SCORE, QUICK_ANSWER_TIME};
+// Объект с исходными условиями игры
+const initialData = {
+  time: 300,
+  notes: 3,
+  get minutes() {
+    return Math.floor(this.time / SECONDS_PER_MINUTE);
+  }
+};
+
+export {initialData, resultsScreenData, levels, statistics, Points, declinationForms, ResultStatuses, FAILURE_SCORE, QUICK_ANSWER_TIME, SECONDS_PER_MINUTE, SMALLEST_TWO_DIGIT_NUMBER};

@@ -2,13 +2,12 @@
 
 import AbstractView from './abstract-view.js';
 import createStateTemplate from './template-game-state.js';
-import {isEnterPressed} from '../util.js';
+import {isEnterPressed} from '../model/util.js';
 
 class ArtistLevelView extends AbstractView {
-  constructor(state, level) {
+  constructor(state) {
     super();
     this.state = state;
-    this.level = level;
   }
 
   get template() {
@@ -21,7 +20,7 @@ class ArtistLevelView extends AbstractView {
         <div class="player-wrapper">
           <div class="player">
             <audio>
-              <source src="${this.level.audio}">
+              <source src="${this.state.level.audio}">
             </audio>
             <button class="player-control player-control--pause"></button>
             <div class="player-track">
@@ -31,7 +30,7 @@ class ArtistLevelView extends AbstractView {
         </div>
         <form class="main-list">
 
-          ${this.level.answers.map((item, index) => `<div class="main-answer-wrapper">
+          ${this.state.level.answers.map((item, index) => `<div class="main-answer-wrapper">
             <input class="main-answer-r" type="radio" id="answer-${index + 1}" name="answer" value="val-${index + 1}"/>
             <label class="main-answer" for="answer-${index + 1}">
               <img class="main-answer-preview" src="${item.image}" alt="${item.artist}" width="134" height="134" tabindex="0">
@@ -49,12 +48,16 @@ class ArtistLevelView extends AbstractView {
     const answersContainer = this.element.querySelector(`.main-list`);
 
     answersContainer.addEventListener(`click`, (evt) => {
-      this.choiceHandler(evt.target.closest(`.main-answer`), this.level.answers);
+      if (evt.target.closest(`.main-answer`)) {
+        const chosenArtist = this.getArtist(evt.target.closest(`.main-answer`));
+        this.choiceHandler(chosenArtist, this.state.level.answers);
+      }
     });
 
     answersContainer.addEventListener(`keydown`, (evt) => {
-      if (isEnterPressed(evt.key)) {
-        this.choiceHandler(evt.target.closest(`.main-answer`), this.level.answers);
+      if (isEnterPressed(evt.key) || evt.target.closest(`.main-answer`)) {
+        const chosenArtist = this.getArtist(evt.target.closest(`.main-answer`));
+        this.choiceHandler(chosenArtist, this.state.level.answers);
       }
     });
   }
@@ -63,7 +66,7 @@ class ArtistLevelView extends AbstractView {
 
   }
 
-  identifyArtist(ancestorElement) {
+  getArtist(ancestorElement) {
     return ancestorElement.querySelector(`.main-answer-preview`).alt;
   }
 

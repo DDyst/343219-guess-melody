@@ -1,7 +1,7 @@
 // Модуль для вывода результатов игрока
 
-import {getPercentageOfSmallerNumbers, getGreaterNumbersQuantity} from './util.js';
-import {FAILURE_SCORE} from './data.js';
+import {getPercentageOfSmallerNumbers, getGreaterNumbersQuantity} from '../model/util.js';
+import {FAILURE_SCORE} from '../model/data.js';
 
 // Объект с шаблонами строк для вывода результата
 const resultTemplates = {
