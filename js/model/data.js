@@ -81,31 +81,6 @@ const declinationForms = {
 // Список баллов, набранных другими игроками
 const statistics = [10, 12, 8, 5, 9, 2];
 
-// // Состояние игры
-// class GameState {
-//   constructor() {
-//     this.timeLeft = initialData.time;
-//     this.notesLeft = initialData.notes;
-//   }
-
-//   get minutes() {
-//     return Math.floor(this.timeLeft / SECONDS_PER_MINUTE);
-//   }
-
-//   get minutesSpent() {
-//     return Math.floor((initialData.time - this.timeLeft) / SECONDS_PER_MINUTE);
-//   }
-
-//   get seconds() {
-//     const secondsLeft = this.timeLeft % SECONDS_PER_MINUTE;
-//     return (secondsLeft >= SMALLEST_TWO_DIGIT_NUMBER) ? secondsLeft : `0${secondsLeft}`;
-//   }
-
-//   get secondsSpent() {
-//     return (initialData.time - this.timeLeft) % SECONDS_PER_MINUTE;
-//   }
-// }
-
 // Объект с данными уровней
 const levels = [
   {

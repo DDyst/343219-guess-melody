@@ -2,10 +2,17 @@
 
 import artistLevelScreen from './artist-level.js';
 import genreLevelScreen from './genre-level.js';
+import ArtistLevelView from './view/artist-level-view.js';
+import GenreLevelView from './view/genre-level-view.js';
 
-const levelRepresentation = {
+const presentersRelation = {
   genre: genreLevelScreen,
   artist: artistLevelScreen
 };
 
-export default levelRepresentation;
+const viewsRelation = {
+  genre: GenreLevelView,
+  artist: ArtistLevelView
+};
+
+export {presentersRelation, viewsRelation};
