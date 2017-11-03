@@ -54,7 +54,7 @@ class Application {
     // welcomeScreen.init(this.gameState);
     window.location.hash = location.hash = ControllerId.WELCOME;
   }
-
+//
   static showLevel(state) {
     // presentersRelation[state.level.type].init(state);
     window.location.hash = `${ControllerId.GAME}?${saveState(state)}`;
