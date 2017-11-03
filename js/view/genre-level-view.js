@@ -53,8 +53,7 @@ class GenreLevelView extends AbstractView {
     }, true);
 
     form.addEventListener(`submit`, (evt) => {
-      const chosenAnswers = Array.from(answersCheckboxes).filter((item) => item.checked);
-      const chosenTracksSources = chosenAnswers.map((item) => item.closest(`.genre-answer`).querySelector(`source`).src);
+      const chosenTracksSources = Array.from(answersCheckboxes).filter((item) => item.checked).map((item) => item.closest(`.genre-answer`).querySelector(`source`).src);
       evt.preventDefault();
       this.formSubmitHandler(evt.currentTarget, chosenTracksSources, this.state.level.answers);
     });
