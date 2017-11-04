@@ -1,15 +1,15 @@
 // Модуль состояния игры
 
-import {initialData, levels, Points, SECONDS_PER_MINUTE, SMALLEST_TWO_DIGIT_NUMBER, QUICK_ANSWER_TIME} from './data.js';
+import {initialData, Points, SECONDS_PER_MINUTE, SMALLEST_TWO_DIGIT_NUMBER, QUICK_ANSWER_TIME} from './data.js';
 import {areArrayElementsIncludedInAnotherArray} from './util.js';
 
 class GameState {
-  constructor() {
-    this.timeLeft = initialData.time;
-    this.notes = initialData.notes;
+  constructor(levels, time, notes, playerAnswers = []) {
+    this.timeLeft = time;
+    this.notes = notes;
     this.levels = levels.slice();
     this.level = this.levels.shift();
-    this.playerAnswers = [];
+    this.playerAnswers = playerAnswers;
   }
 
   get minutes() {
@@ -30,7 +30,11 @@ class GameState {
   }
 
   tick() {
-    this.timeLeft--;
+    if (this.timeLeft > 0) {
+      this.timeLeft--;
+      return true;
+    }
+    return false;
   }
 
   setNextLevel() {
@@ -50,7 +54,7 @@ class GameState {
   }
 
   checkGenreAnswer(chosenTracksSources, answers, startTime) {
-    const correctAnswersSources = answers.filter((item) => item.correct).map((item) => item.src);
+    const correctAnswersSources = answers.filter((item) => item.genre === this.level.genre).map((item) => item.src);
 
     if (chosenTracksSources.length !== correctAnswersSources.length || !areArrayElementsIncludedInAnotherArray(chosenTracksSources, correctAnswersSources)) {
       this.handleIncorrectAnswer();
@@ -60,7 +64,7 @@ class GameState {
   }
 
   checkArtistAnswer(chosenArtist, answers, startTime) {
-    const correctAnswer = answers.find((item) => item.correct).artist;
+    const correctAnswer = answers.find((item) => item.isCorrect).title;
 
     if (chosenArtist !== correctAnswer) {
       this.handleIncorrectAnswer();

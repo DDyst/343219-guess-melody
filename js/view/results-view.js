@@ -6,7 +6,7 @@ import createStatsTemplate from './template-stats.js';
 import {isEnterPressed} from '../model/util.js';
 
 class ResultsView extends AbstractView {
-  constructor(screenData, statistics, result) {
+  constructor(screenData, statistics = [], result) {
     super();
     this.screenData = screenData;
     this.statistics = statistics;

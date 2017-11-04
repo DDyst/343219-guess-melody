@@ -2,37 +2,36 @@
 
 import welcomeScreen from './welcome.js';
 import resultsScreen from './results.js';
-import GameState from './model/game-state.js';
 import {presentersRelation} from './levels-relations.js';
-import artistLevelScreen from './artist-level.js';
-import genreLevelScreen from './genre-level.js';
+import ArtistLevelScreen from './artist-level.js';
+import GenreLevelScreen from './genre-level.js';
+import Loader from './loader.js';
 
 const ControllerId = {
   WELCOME: ``,
-  GAME: `game`,
+  GENRE: `genreLevel`,
+  ARTIST: `artistLevel`,
   SCORE: `score`
 };
 
 const saveState = (state) => {
-  return JSON.stringify(state);
+  return window.btoa(encodeURIComponent(JSON.stringify(state)));
 };
 
 const loadState = (dataString) => {
-  try {
-    return JSON.parse(dataString);
-  } catch (e) {
-    throw new Error();
-  }
-};
-
-const routes = {
-  [ControllerId.WELCOME]: welcomeScreen,
-  [ControllerId.GAME]: genreLevelScreen,
-  [ControllerId.SCORE]: resultsScreen
+  return JSON.parse(decodeURIComponent(window.atob(dataString)));
 };
 
 class Application {
-  static init() {
+  static init(levels) { // (data)
+    this.gameData = levels;
+    this.routes = {
+      [ControllerId.WELCOME]: welcomeScreen,
+      [ControllerId.ARTIST]: new ArtistLevelScreen(this.gameData),
+      [ControllerId.GENRE]: new GenreLevelScreen(this.gameData),
+      [ControllerId.SCORE]: resultsScreen
+    };
+
     const hashChangeHandler = () => {
       const hashValue = window.location.hash.replace(`#`, ``);
       const [id, data] = hashValue.split(`?`);
@@ -43,29 +42,26 @@ class Application {
   }
 
   static changeHash(id, data) {
-    const controller = routes[id];
+    const controller = this.routes[id];
     if (controller) {
-      controller.init(loadState(data));
+      controller.init(data ? loadState(data) : null);
     }
   }
 
   static showWelcome() {
-    this.gameState = new GameState();
-    // welcomeScreen.init(this.gameState);
-    window.location.hash = location.hash = ControllerId.WELCOME;
+    location.hash = location.hash = ControllerId.WELCOME;
   }
-//
+
   static showLevel(state) {
-    // presentersRelation[state.level.type].init(state);
-    window.location.hash = `${ControllerId.GAME}?${saveState(state)}`;
+    const Presenter = presentersRelation[state.level.type];
+    (new Presenter()).init(state);
   }
 
   static showResults(state) {
-    // resultsScreen.init(state);
-    window.location.hash = `${ControllerId.SCORE}?${saveState(state)}`;
+    location.hash = `${ControllerId.SCORE}?${saveState(state)}`;
   }
 }
 
-Application.init();
+Loader.loadData().then((gameData) => Application.init(gameData)).catch(window.console.error);
 
 export default Application;

@@ -15,7 +15,7 @@ class GenreLevelView extends AbstractView {
       ${createStateTemplate(this.state)}
 
       <div class="main-wrap">
-        <h2 class="title">Выберите ${this.state.level.genre} треки</h2>
+        <h2 class="title">${this.state.level.question}</h2>
         <form class="genre">
 
           ${this.state.level.answers.map((item, index) => `<div class="genre-answer">
@@ -48,8 +48,15 @@ class GenreLevelView extends AbstractView {
     const answersCheckboxes = this.element.querySelectorAll(`input[name="answer"]`);
 
     submitButton.disabled = true;
+
+    form.addEventListener(`click`, (evt) => {
+      if (evt.target.classList.contains(`player-control`)) {
+        this._formClickHandler(evt.target, evt.target.previousElementSibling);
+      }
+    });
+
     form.addEventListener(`change`, () => {
-      this.formChangeHandler(submitButton, answersCheckboxes);
+      this._formChangeHandler(submitButton, answersCheckboxes);
     }, true);
 
     form.addEventListener(`submit`, (evt) => {
@@ -59,8 +66,20 @@ class GenreLevelView extends AbstractView {
     });
   }
 
-  formChangeHandler(buttonElement, checkboxesElements) {
+  _formChangeHandler(buttonElement, checkboxesElements) {
     this.changeButtonDisability(buttonElement, checkboxesElements);
+  }
+
+  _formClickHandler(control, track) {
+    if (track.paused) {
+      track.play();
+      control.classList.remove(`player-control--play`);
+      control.classList.add(`player-control--pause`);
+    } else {
+      track.pause();
+      control.classList.add(`player-control--play`);
+      control.classList.remove(`player-control--pause`);
+    }
   }
 
   formSubmitHandler() {

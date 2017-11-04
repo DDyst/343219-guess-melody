@@ -3,10 +3,6 @@
 import LevelScreen from './level.js';
 
 class ArtistLevelScreen extends LevelScreen {
-  constructor() {
-    super();
-  }
-
   redefineHandlers() {
     this.view.choiceHandler = (chosenArtist, answers) => {
       this.stopTimer();
@@ -16,4 +12,4 @@ class ArtistLevelScreen extends LevelScreen {
   }
 }
 
-export default new ArtistLevelScreen();
+export default ArtistLevelScreen;
