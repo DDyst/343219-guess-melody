@@ -4,10 +4,10 @@ import {initialData, levels, Points, SECONDS_PER_MINUTE, SMALLEST_TWO_DIGIT_NUMB
 import {areArrayElementsIncludedInAnotherArray} from './util.js';
 
 class GameState {
-  constructor() {
+  constructor() { // (data)
     this.timeLeft = initialData.time;
     this.notes = initialData.notes;
-    this.levels = levels.slice();
+    this.levels = levels.slice(); // = data;
     this.level = this.levels.shift();
     this.playerAnswers = [];
   }
