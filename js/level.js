@@ -1,13 +1,12 @@
 // Модуль для создания общего класса уровней игры
 
-import GameState from './model/game-state.js';
 import Application from './application.js';
 import changeView from './view/change-view.js';
 import {viewsRelation} from './levels-relations.js';
 
 class LevelScreen {
-  constructor() {
-    this.state = new GameState();
+  constructor(state) {
+    this.state = state;
   }
 
   init(state) {
@@ -33,9 +32,12 @@ class LevelScreen {
   }
 
   tick() {
-    this.state.tick();
-    this.view.updateTime();
-    this.timer = window.setTimeout(() => this.tick(), 1000);
+    if (this.state.tick()) {
+      this.view.updateTime();
+      this.timer = window.setTimeout(() => this.tick(), 1000);
+    } else {
+      Application.showResults(this.state);
+    }
   }
 
   stopTimer() {

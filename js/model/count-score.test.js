@@ -2,8 +2,8 @@ import assert from 'assert';
 import {countScore} from './count-score.js';
 
 describe(`Scoring`, () => {
-  it(`should return -1 if there are less than 10 answers`, () => {
-    assert.equal(countScore([1, 2, 1], 3), -1);
+  it(`should return -1 if there are lesser answers than levels`, () => {
+    assert.equal(countScore([1, 2, 1], [{}, {}, {}, {}]), -1);
   });
 
   it(`should return 10 if there are 10 slow answers with zero mistakes`, () => {

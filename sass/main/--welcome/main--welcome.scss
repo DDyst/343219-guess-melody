@@ -29,10 +29,14 @@
   width: 0;
 }
 
-.main-play:hover {
+.main-play:disabled {
+  border-left-color: #cccccc;
+}
+
+.main-play:not(:disabled):hover {
   transform: scale(1.05);
 }
 
-.main-play:active {
+.main-play:not(:disabled):active {
   transform: scale(1.04);
 }

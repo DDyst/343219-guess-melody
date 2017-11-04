@@ -3,6 +3,8 @@
 import WelcomeView from './view/welcome-view.js';
 import changeView from './view/change-view.js';
 import Application from './application.js';
+import GameState from './model/game-state.js';
+import {initialData} from './model/data.js';
 
 class WelcomeScreen {
   constructor() {
@@ -10,13 +12,12 @@ class WelcomeScreen {
     this.view.startButtonClickHandler = () => this.startButtonClickHandler();
   }
 
-  init(state) {
-    this.state = state;
+  init() {
     changeView(this.view);
   }
 
   startButtonClickHandler() {
-    Application.showLevel(this.state);
+    Application.showLevel(new GameState(Application.gameData, initialData.time, initialData.notes));
   }
 }
 

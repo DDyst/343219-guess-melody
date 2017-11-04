@@ -3,10 +3,6 @@
 import LevelScreen from './level.js';
 
 class GenreLevelScreen extends LevelScreen {
-  constructor() {
-    super();
-  }
-
   redefineHandlers() {
     this.view.formSubmitHandler = (form, chosenTracksSources, answers) => {
       this.stopTimer();
@@ -17,4 +13,4 @@ class GenreLevelScreen extends LevelScreen {
   }
 }
 
-export default new GenreLevelScreen();
+export default GenreLevelScreen;
