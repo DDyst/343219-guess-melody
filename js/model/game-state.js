@@ -4,7 +4,8 @@ import {initialData, Points, SECONDS_PER_MINUTE, SMALLEST_TWO_DIGIT_NUMBER, QUIC
 import {areArrayElementsIncludedInAnotherArray} from './util.js';
 
 class GameState {
-  constructor(levels, time, notes, playerAnswers = []) {
+  constructor(levels, sources, time, notes, playerAnswers = []) {
+    this._sources = sources;
     this.timeLeft = time;
     this.notes = notes;
     this.levels = levels.slice();
@@ -27,6 +28,10 @@ class GameState {
 
   get secondsSpent() {
     return (initialData.time - this.timeLeft) % SECONDS_PER_MINUTE;
+  }
+
+  getSource(url) {
+    return this._sources[url];
   }
 
   tick() {

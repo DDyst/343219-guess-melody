@@ -11,6 +11,7 @@ class ArtistLevelView extends AbstractView {
   }
 
   get template() {
+    const src = this.state.getSource(this.state.level.src);
     return `<section class="main main--level main--level-artist">
 
       ${createStateTemplate(this.state)}
@@ -19,10 +20,8 @@ class ArtistLevelView extends AbstractView {
         <h2 class="title main-title">${this.state.level.question}</h2>
         <div class="player-wrapper">
           <div class="player">
-            <audio>
-              <source src="${this.state.level.src}">
-            </audio>
-            <button class="player-control player-control--play"></button>
+            <audio src="${src || ``}" ${src ? `autoplay` : ``}></audio>
+            <button class="player-control player-control--${src ? `pause` : `play`}" ${src ? `` : `disabled`}></button>
             <div class="player-track">
               <span class="player-status"></span>
             </div>
@@ -47,6 +46,14 @@ class ArtistLevelView extends AbstractView {
   bind() {
     const answersContainer = this.element.querySelector(`.main-list`);
     const playerControl = this.element.querySelector(`.player-control`);
+    const imgElements = this.element.querySelectorAll(`.main-answer-preview`);
+
+    this.minutesContainer = this.element.querySelector(`.timer-value-mins`);
+    this.secondsContainer = this.element.querySelector(`.timer-value-secs`);
+
+    Array.from(imgElements).forEach((item) => {
+      item.addEventListener(`error`, () => this._imgErrorHandler(item));
+    });
 
     playerControl.addEventListener(`click`, (evt) => {
       this._controlClickHandler(evt.target, evt.target.previousElementSibling);
@@ -83,13 +90,18 @@ class ArtistLevelView extends AbstractView {
     }
   }
 
+  // 404 ошибку нельзя скрыть из консоли, скрываем изображение на странице
+  _imgErrorHandler(element) {
+    element.style.visibility = `hidden`;
+  }
+
   getArtist(ancestorElement) {
     return ancestorElement.querySelector(`.main-answer-preview`).alt;
   }
 
   updateTime() {
-    this.element.querySelector(`.timer-value-mins`).textContent = this.state.minutes;
-    this.element.querySelector(`.timer-value-secs`).textContent = this.state.seconds;
+    this.minutesContainer.textContent = this.state.minutes;
+    this.secondsContainer.textContent = this.state.seconds;
   }
 }
 

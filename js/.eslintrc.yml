@@ -7,3 +7,6 @@ env:
   mocha: true
 
 extends: 'htmlacademy/es6'
+
+rules:
+  no-alert: 0
