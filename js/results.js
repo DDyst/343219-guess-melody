@@ -11,7 +11,7 @@ import {initialData} from './model/data.js';
 
 class ResultsScreen {
   init(jsonState) {
-    const state = new GameState(jsonState.levels, jsonState.timeLeft, jsonState.notes, jsonState.playerAnswers);
+    const state = new GameState(jsonState.levels, Application.localSources, jsonState.timeLeft, jsonState.notes, jsonState.playerAnswers);
     state.score = countScore(state.playerAnswers, Application.gameData);
     state.quickAnswers = countQuickAnswers(state.playerAnswers);
 

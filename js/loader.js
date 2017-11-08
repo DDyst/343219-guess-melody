@@ -8,6 +8,19 @@ class Loader {
     return fetch(`${SERVER_URL}/questions`).then((res) => res.json());
   }
 
+  static loadAudio(url) {
+    return fetch(url)
+        .then((response) => {
+          if (response.status !== 200) {
+            throw new Error();
+          }
+          return response.blob();
+        })
+        .then((blob) => URL.createObjectURL(blob));
+  // Обработка сделана на уровне блокировки проигрывания
+  // catch не скрывает ошибку из консоли
+  }
+
   static loadResults(name = DEFAULT_NAME) {
     return fetch(`${SERVER_URL}/stats/${name}`).then((res) => res.json());
   }

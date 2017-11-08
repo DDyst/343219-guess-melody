@@ -27,10 +27,12 @@
   text-indent: -100em;
   transform-origin: center;
   width: 0;
+  cursor: pointer;
 }
 
 .main-play:disabled {
   border-left-color: #cccccc;
+  cursor: default;
 }
 
 .main-play:not(:disabled):hover {

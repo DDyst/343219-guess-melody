@@ -22,8 +22,25 @@ const loadState = (dataString) => {
   return JSON.parse(decodeURIComponent(window.atob(dataString)));
 };
 
+const prepareData = (localSources) => {
+  return Promise.all(
+      Object.keys(localSources).map((src) => {
+        return Loader.loadAudio(src).then((audio) => {
+          localSources[src] = audio;
+        });
+      })
+  );
+};
+
+const extractURL = (levels) => {
+  return levels.reduce((acc, item) =>
+    acc.concat(item.src || item.answers.map((answersItem) => answersItem.src)), []
+  );
+};
+
 class Application {
-  static init(levels) { // (data)
+  static init(levels) {
+    this.localSources = {};
     this.gameData = levels;
     this.routes = {
       [ControllerId.WELCOME]: welcomeScreen,
@@ -41,6 +58,14 @@ class Application {
     hashChangeHandler();
   }
 
+  static preloadAudio() {
+    extractURL(this.gameData).forEach((src) => {
+      this.localSources[src] = null;
+    });
+
+    return prepareData(this.localSources);
+  }
+
   static changeHash(id, data) {
     const controller = this.routes[id];
     if (controller) {
@@ -49,7 +74,7 @@ class Application {
   }
 
   static showWelcome() {
-    location.hash = location.hash = ControllerId.WELCOME;
+    location.hash = ControllerId.WELCOME;
   }
 
   static showLevel(state) {
@@ -62,6 +87,6 @@ class Application {
   }
 }
 
-Loader.loadData().then((gameData) => Application.init(gameData)).catch(window.console.error);
+Loader.loadData().then((gameData) => Application.init(gameData)).catch(() => alert(`Данные уровней не загрузились`));
 
 export default Application;

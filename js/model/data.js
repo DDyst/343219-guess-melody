@@ -39,38 +39,38 @@ const Points = {
 };
 
 // Объект с формами склоняемых слов
-const declinationForms = {
-  mistakes: {
+const DeclinationForms = {
+  MISTAKES: {
     single: `ошибку`,
     few: `ошибки`,
     many: `ошибок`
   },
 
-  points: {
+  POINTS: {
     single: `балл`,
     few: `балла`,
     many: `баллов`
   },
 
-  minutes: {
+  MINUTES: {
     single: `минуту`,
     few: `минуты`,
     many: `минут`
   },
 
-  seconds: {
+  SECONDS: {
     single: `секунду`,
     few: `секунды`,
     many: `секунд`
   },
 
-  times: {
+  TIMES: {
     single: `раз`,
     few: `раза`,
     many: `раз`
   },
 
-  quick: {
+  QUICK: {
     single: `быстрый`,
     many: `быстрых`
   }
@@ -85,4 +85,4 @@ const initialData = {
   }
 };
 
-export {initialData, resultsScreenData, Points, declinationForms, ResultStatuses, FAILURE_SCORE, QUICK_ANSWER_TIME, SECONDS_PER_MINUTE, SMALLEST_TWO_DIGIT_NUMBER};
+export {initialData, resultsScreenData, Points, DeclinationForms, ResultStatuses, FAILURE_SCORE, QUICK_ANSWER_TIME, SECONDS_PER_MINUTE, SMALLEST_TWO_DIGIT_NUMBER};
